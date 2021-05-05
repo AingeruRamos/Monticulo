@@ -18,6 +18,8 @@ void FlotarMinimo(int indice_elem, Monticulo* m);
 
 void Insertar(int elem, Monticulo* m);
 
+void Eliminar(int indice_elem, Monticulo* m);
+
 void PrintMonticulo(Monticulo* m);
 
 #endif

@@ -73,6 +73,10 @@ void Insertar(int elem, Monticulo* m) {
     }
 }
 
+void Eliminar(int indice_elem, Monticulo* m) {
+    
+}
+
 void PrintMonticulo(Monticulo* m) {
     char* tipo;
     if(m->tipo == MONTICULO_MIN) { tipo = "min"; }
