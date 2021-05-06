@@ -1,8 +1,6 @@
 #include "monticulo.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-
+//DECLARACION DE FUNCIONES AUXILIARES
 void intercambio(int* p1, int* p2);
 
 Monticulo* CrearMonticulo(char tipo, char metodo, int num_elementos, int* array) {
@@ -123,7 +121,7 @@ void Insertar(int elem, Monticulo* m) {
         if(m->metodo == METODO_FLOTAR) {
             FlotarMinimo(m->num_elementos-1, m);
         } else if(m->metodo == METODO_HUNDIR) {
-            printf("No disponible\n");
+            HundirMaximo(0, m);
         }
     } else {
         if(m->metodo == METODO_FLOTAR) {
@@ -134,7 +132,31 @@ void Insertar(int elem, Monticulo* m) {
     }
 }
 
-void Eliminar(int indice_elem, Monticulo* m) {}
+int RetirarRaiz(Monticulo* m) {
+    int aux = m->array[0];
+    m->array[0] = m->array[m->num_elementos-1];
+    m->num_elementos--;
+    if(m->tipo == MONTICULO_MIN) {
+        HundirMaximo(0, m);
+    } else if(m->tipo == MONTICULO_MAX) {
+        HundirMinimo(0, m);
+    }
+
+    return aux;
+}
+
+int Eliminar(int indice_elem, Monticulo* m) {
+    int aux = m->array[indice_elem];
+    m->array[indice_elem] = m->array[m->num_elementos-1];
+    m->num_elementos--;
+    if(m->tipo == MONTICULO_MIN) {
+        HundirMaximo(indice_elem, m);
+    } else if(m->tipo == MONTICULO_MAX) {
+        HundirMinimo(indice_elem, m);
+    }
+
+    return aux;
+}
 
 void PrintMonticulo(Monticulo* m) {
     char* tipo;
@@ -158,7 +180,7 @@ void PrintMonticulo(Monticulo* m) {
     printf("\n---------------------------------\n\n");
 }
 
-//FUNCIONES AUXILIARES
+//IMPLEMETACIIN FUNCIONES AUXILIARES
 void intercambio(int* p1, int* p2) {
     int aux = *p1;
     *p1 = *p2;
