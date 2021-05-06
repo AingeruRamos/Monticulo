@@ -37,8 +37,9 @@ int main(int argc, char** argv) {
     Monticulo* m = CrearMonticulo(tipo, metodo, 12, array);
     PrintMonticulo(m);
 
+/*
     Insertar(3, m);
     PrintMonticulo(m);
-
+*/
     return 0;
 }

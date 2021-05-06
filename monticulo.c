@@ -3,11 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void intercambio(int* p1, int* p2) {
-    int aux = *p1;
-    *p1 = *p2;
-    *p2 = aux;
-}
+void intercambio(int* p1, int* p2);
 
 Monticulo* CrearMonticulo(char tipo, char metodo, int num_elementos, int* array) {
     Monticulo* m = (Monticulo*) malloc(sizeof(Monticulo));
@@ -23,7 +19,9 @@ Monticulo* CrearMonticulo(char tipo, char metodo, int num_elementos, int* array)
                 FlotarMinimo(i, m);
             }
         } else if(m->metodo == METODO_HUNDIR) {
-            printf("No disponible\n");
+            for(i=m->num_elementos; i>=0; i--) {
+                HundirMaximo(i, m);
+            }
         }
     } else if(m->tipo == MONTICULO_MAX) { //De mayor a menor
         if(m->metodo == METODO_FLOTAR) {
@@ -31,7 +29,7 @@ Monticulo* CrearMonticulo(char tipo, char metodo, int num_elementos, int* array)
                 FlotarMaximo(i, m);
             }
         } else if(m->metodo == METODO_HUNDIR) {
-            for(i=0; i<m->num_elementos; i++) {
+            for(i=m->num_elementos; i>=0; i--) {
                 HundirMinimo(i, m);
             }
         }
@@ -77,14 +75,13 @@ void FlotarMinimo(int indice_elem, Monticulo* m) {
 
 void HundirMinimo(int indice_elem, Monticulo* m) {
     int j = indice_elem;
-    int aux = m->array[indice_elem];
 
     int hijoMax = (2*j)+1;
     while(hijoMax < m->num_elementos) {
         if(hijoMax < m->num_elementos-1 && m->array[hijoMax+1] > m->array[hijoMax]) {
             hijoMax++;
         }
-        if(aux < m->array[hijoMax]) {
+        if(m->array[j] < m->array[hijoMax]) {
             //Intercambio de posiciones
             intercambio(&m->array[j], &m->array[hijoMax]);
 
@@ -97,7 +94,27 @@ void HundirMinimo(int indice_elem, Monticulo* m) {
     }
 }
 
-void HundirMaximo(int indice_elem, Monticulo* m) {}
+void HundirMaximo(int indice_elem, Monticulo* m) {
+    int j = indice_elem;
+
+    int hijoMin = (2*j)+1;
+    while(hijoMin < m->num_elementos) {
+        if(hijoMin+1 < m->num_elementos && m->array[hijoMin+1] < m->array[hijoMin]) {
+            hijoMin++;
+        }
+
+        if(m->array[j] > m->array[hijoMin]) {
+            //Intercambio de posiciones
+            intercambio(&m->array[j], &m->array[hijoMin]);
+
+            //Bajamos al nodo hijoMin
+            j = hijoMin;
+            hijoMin = (2*j)+1;
+        } else {
+            break;
+        }
+    }
+}
 
 void Insertar(int elem, Monticulo* m) {
     m->num_elementos++;
@@ -139,4 +156,11 @@ void PrintMonticulo(Monticulo* m) {
         printf("%d ", m->array[i]);
     }
     printf("\n---------------------------------\n\n");
+}
+
+//FUNCIONES AUXILIARES
+void intercambio(int* p1, int* p2) {
+    int aux = *p1;
+    *p1 = *p2;
+    *p2 = aux;
 }
