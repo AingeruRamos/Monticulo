@@ -1,32 +1,34 @@
 #include "monticulo.h"
 
-//DECLARACION DE FUNCIONES AUXILIARES
+//DECLARACIÓN FUNCIONES AUXILIARES
 void intercambio(int* p1, int* p2);
 
+///////////////////////////////////////////////
+//  IMPLEMENTACIÓN DE FUNCIONES PRINCIPALES  //
+///////////////////////////////////////////////
 Monticulo* CrearMonticulo(char tipo, char metodo, int num_elementos, int* array) {
     Monticulo* m = (Monticulo*) malloc(sizeof(Monticulo));
     m->tipo = tipo;
-    m->metodo = metodo;
     m->num_elementos = num_elementos;
     m->array = array;
 
     int i;
-    if(m->tipo == MONTICULO_MIN) { //De menor a mayor
-        if(m->metodo == METODO_FLOTAR) {
+    if(m->tipo == MONTICULO_MIN) {
+        if(metodo == METODO_FLOTAR) {
             for(i=1; i<m->num_elementos; i++) {
                 FlotarMinimo(i, m);
             }
-        } else if(m->metodo == METODO_HUNDIR) {
+        } else if(metodo == METODO_HUNDIR) {
             for(i=m->num_elementos; i>=0; i--) {
                 HundirMaximo(i, m);
             }
         }
-    } else if(m->tipo == MONTICULO_MAX) { //De mayor a menor
-        if(m->metodo == METODO_FLOTAR) {
+    } else if(m->tipo == MONTICULO_MAX) {
+        if(metodo == METODO_FLOTAR) {
             for(i=1; i<m->num_elementos; i++) {
                 FlotarMaximo(i, m);
             }
-        } else if(m->metodo == METODO_HUNDIR) {
+        } else if(metodo == METODO_HUNDIR) {
             for(i=m->num_elementos; i>=0; i--) {
                 HundirMinimo(i, m);
             }
@@ -44,6 +46,7 @@ void FlotarMaximo(int indice_elem, Monticulo* m) {
 
     int aux;
     while(j > 0 && m->array[padre] < m->array[j]) {
+        //Intercambio de posiciones
         intercambio(&m->array[j], &m->array[padre]);
 
         //Subimos al nodo padre
@@ -76,7 +79,7 @@ void HundirMinimo(int indice_elem, Monticulo* m) {
 
     int hijoMax = (2*j)+1;
     while(hijoMax < m->num_elementos) {
-        if(hijoMax < m->num_elementos-1 && m->array[hijoMax+1] > m->array[hijoMax]) {
+        if(hijoMax+1 < m->num_elementos && m->array[hijoMax+1] > m->array[hijoMax]) {
             hijoMax++;
         }
         if(m->array[j] < m->array[hijoMax]) {
@@ -115,32 +118,19 @@ void HundirMaximo(int indice_elem, Monticulo* m) {
 }
 
 void Insertar(int elem, Monticulo* m) {
+    m->array[m->num_elementos] = elem;
     m->num_elementos++;
-    m->array[m->num_elementos-1] = elem;
-    if(m->tipo == MONTICULO_MIN) {
-        if(m->metodo == METODO_FLOTAR) {
-            FlotarMinimo(m->num_elementos-1, m);
-        } else if(m->metodo == METODO_HUNDIR) {
-            HundirMaximo(0, m);
-        }
-    } else {
-        if(m->metodo == METODO_FLOTAR) {
-            FlotarMaximo(m->num_elementos-1, m);
-        } else if(m->metodo == METODO_HUNDIR) {
-            HundirMinimo(0, m);
-        }
-    }
+    if(m->tipo == MONTICULO_MIN) { FlotarMinimo(m->num_elementos-1, m); } 
+    else if(m->tipo == MONTICULO_MAX) { FlotarMaximo(m->num_elementos-1, m); }
 }
 
 int RetirarRaiz(Monticulo* m) {
     int aux = m->array[0];
-    m->array[0] = m->array[m->num_elementos-1];
     m->num_elementos--;
-    if(m->tipo == MONTICULO_MIN) {
-        HundirMaximo(0, m);
-    } else if(m->tipo == MONTICULO_MAX) {
-        HundirMinimo(0, m);
-    }
+    m->array[0] = m->array[m->num_elementos];
+    m->num_elementos--;
+    if(m->tipo == MONTICULO_MIN) { HundirMaximo(0, m); } 
+    else if(m->tipo == MONTICULO_MAX) { HundirMinimo(0, m); }
 
     return aux;
 }
@@ -149,11 +139,8 @@ int Eliminar(int indice_elem, Monticulo* m) {
     int aux = m->array[indice_elem];
     m->array[indice_elem] = m->array[m->num_elementos-1];
     m->num_elementos--;
-    if(m->tipo == MONTICULO_MIN) {
-        HundirMaximo(indice_elem, m);
-    } else if(m->tipo == MONTICULO_MAX) {
-        HundirMinimo(indice_elem, m);
-    }
+    if(m->tipo == MONTICULO_MIN) { HundirMaximo(indice_elem, m); } 
+    else if(m->tipo == MONTICULO_MAX) { HundirMinimo(indice_elem, m); }
 
     return aux;
 }
@@ -163,14 +150,9 @@ void PrintMonticulo(Monticulo* m) {
     if(m->tipo == MONTICULO_MIN) { tipo = "MIN"; }
     else if(m->tipo == MONTICULO_MAX) { tipo = "MAX"; }
 
-    char* metodo;
-    if(m->metodo == METODO_FLOTAR) { metodo = "FLOTAR"; }
-    else if(m->metodo == METODO_HUNDIR) { metodo = "HUNDIR"; }
-
     printf("---------------------------------\n");
     printf("Montículo\n");
-    printf("Tipo: %s\t Metodo: %s\n", tipo, metodo);
-    printf("Tamaño: %d\n", m->num_elementos);
+    printf("Tipo: %s\t Tamaño: %d\n", tipo, m->num_elementos);
 
     printf("\nValores del montículo:\n");
     int i;
@@ -180,7 +162,9 @@ void PrintMonticulo(Monticulo* m) {
     printf("\n---------------------------------\n\n");
 }
 
-//IMPLEMETACIIN FUNCIONES AUXILIARES
+///////////////////////////////////////////////
+//  IMPLEMENTACIÓN DE FUNCIONES AUXILIARES   //
+///////////////////////////////////////////////
 void intercambio(int* p1, int* p2) {
     int aux = *p1;
     *p1 = *p2;
