@@ -7,28 +7,31 @@ void intercambio(int* p1, int* p2);
 //  IMPLEMENTACIÓN DE FUNCIONES PRINCIPALES  //
 ///////////////////////////////////////////////
 Monticulo* CrearMonticulo(char tipo, char metodo, int num_elementos, int* array) {
+
+    //Se crea la estructura en memoria y se rellena
     Monticulo* m = (Monticulo*) malloc(sizeof(Monticulo));
     m->tipo = tipo;
     m->num_elementos = num_elementos;
     m->array = array;
 
+    //Se construye el montículo teniendo en cuenta tipo y método:
     int i;
-    if(m->tipo == MONTICULO_MIN) {
-        if(metodo == METODO_FLOTAR) {
+    if(m->tipo == MONTICULO_MIN) { /* Tipo de montículo MIN */
+        if(metodo == METODO_FLOTAR) { /* Método de construcción  FLOTAR*/
             for(i=1; i<m->num_elementos; i++) {
                 FlotarMinimo(i, m);
             }
-        } else if(metodo == METODO_HUNDIR) {
+        } else if(metodo == METODO_HUNDIR) { /* Método de construcción HUNDIR */
             for(i=m->num_elementos; i>=0; i--) {
                 HundirMaximo(i, m);
             }
         }
-    } else if(m->tipo == MONTICULO_MAX) {
-        if(metodo == METODO_FLOTAR) {
+    } else if(m->tipo == MONTICULO_MAX) { /* Tipo de montículo MAX*/
+        if(metodo == METODO_FLOTAR) { /* Método de construcción FLOTAR*/
             for(i=1; i<m->num_elementos; i++) {
                 FlotarMaximo(i, m);
             }
-        } else if(metodo == METODO_HUNDIR) {
+        } else if(metodo == METODO_HUNDIR) { /* Método de construcción HUNDIR*/
             for(i=m->num_elementos; i>=0; i--) {
                 HundirMinimo(i, m);
             }
